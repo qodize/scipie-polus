@@ -17,7 +17,7 @@ def orders():
     return fl.Response(status=201)
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def hello_world():
     return 'Hello, World!'
 

@@ -35,7 +35,7 @@ class PG_Orders:
                  {order.latitude},
                  {order.longitude},
                  '{order.status}')
-         RETURNING id""")
+         RETURNING orders.id""")
         order_id = cursor.fetchall()[0][0]
         return PG_Orders.get(order_id)
 

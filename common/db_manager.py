@@ -56,7 +56,7 @@ class PG_Orders:
             query += f" AND user_phone like '{user_phone}'"
         print(query)
         cursor.execute(query)
-        return [Order(**o) for o in cursor.fetchall()]
+        return [Order(*o) for o in cursor.fetchall()]
 
     @staticmethod
     @postgres_wrapper

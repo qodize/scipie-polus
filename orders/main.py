@@ -19,7 +19,8 @@ CORS(app)
 def orders():
     if fl.request.method == 'POST':
         raw_order = Order.from_json(fl.request.json)
-        new_order = PG_Orders.insert(raw_order)
+        order_id = PG_Orders.insert(raw_order)
+        new_order = PG_Orders.get(order_id)
         return new_order.to_json()
     return []
 

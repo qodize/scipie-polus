@@ -24,7 +24,7 @@ def postgres_wrapper(func):
 class PG_Orders:
     @staticmethod
     @postgres_wrapper
-    def insert(cursor, order: Order) -> Order:
+    def insert(cursor, order: Order) -> int:
         print(f"""INSERT INTO orders
          VALUES (DEFAULT,
                  {order.user.id},
@@ -48,8 +48,7 @@ class PG_Orders:
                  '{order.status}')
          RETURNING orders.id""")
         order_id = cursor.fetchall()[0][0]
-        print(order_id)
-        return PG_Orders.get(order_id)
+        return order_id
 
     @staticmethod
     @postgres_wrapper

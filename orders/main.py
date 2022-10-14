@@ -6,11 +6,13 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 
 import flask as fl
+from flask_cors import CORS
+
 from common import Order
 
 
 app = fl.Flask(__name__)
-
+CORS(app)
 
 @app.route('/api/polus/orders/', methods=['POST', 'GET'])
 def orders():

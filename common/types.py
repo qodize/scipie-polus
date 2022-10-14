@@ -23,28 +23,21 @@ class Transport:
 @dataclasses.dataclass
 class Order:
     id: Optional[int]
-    user: User
-    driver: Optional[Driver]
-    transport: Transport
+    user_id: int
+    driver_id: Optional[int]
+    transport_type: str
     start: dt.datetime
     end: dt.datetime
     latitude: float
     longitude: float
-    status: str
+    status: Optional[str]
 
     @classmethod
     def from_json(cls, data):
-        user = User(**data.pop('user'))
-        driver = Driver(**data.pop('driver')) if data.get('driver') else None
-        transport = Transport(**data.pop('transport'))
         data['start'] = dt.datetime.fromisoformat(data['start'])
         data['end'] = dt.datetime.fromisoformat(data['end'])
-        data['status'] = data.get('status')
-        return cls(id=data.pop('id', None), user=user, driver=driver, transport=transport, **data)
+        return cls(**data)
 
     def to_json(self):
         data = self.__dict__
-        data['user'] = self.user.__dict__
-        data['driver'] = self.driver.__dict__ if self.driver else None
-        data['transport'] = self.transport.__dict__
         return data

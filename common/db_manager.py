@@ -25,22 +25,11 @@ class PG_Orders:
     @staticmethod
     @postgres_wrapper
     def insert(cursor, order: Order) -> int:
-        print(f"""INSERT INTO orders
-         VALUES (DEFAULT,
-                 {order.user.id},
-                 {order.driver.id if order.driver else "NULL"},
-                 '{order.transport.type}',
-                 '{order.start}',
-                 '{order.end}',
-                 {order.latitude},
-                 {order.longitude},
-                 '{order.status}')
-         RETURNING orders.id""")
         cursor.execute(f"""INSERT INTO orders
          VALUES (DEFAULT,
-                 {order.user.id},
-                 {order.driver.id if order.driver else "NULL"},
-                 '{order.transport.type}',
+                 {order.user_id},
+                 {order.driver_id},
+                 '{order.transport_type}',
                  '{order.start}',
                  '{order.end}',
                  {order.latitude},
@@ -53,8 +42,6 @@ class PG_Orders:
     @staticmethod
     @postgres_wrapper
     def get(cursor, order_id: int) -> Order:
-        cursor.execute(f"""SELECT * FROM orders""")
-        print(cursor.fetchall())
         cursor.execute(f"""SELECT * FROM orders WHERE id = {order_id}""")
         order = Order(*cursor.fetchall()[0])
         return order

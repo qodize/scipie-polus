@@ -12,12 +12,12 @@ from common import Order
 app = fl.Flask(__name__)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/api/polus/orders', methods=['POST'])
 def orders():
     return fl.Response(status=201)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/api/polus/orders', methods=['GET'])
 def hello_world():
     return 'Hello, World!'
 

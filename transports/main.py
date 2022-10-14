@@ -6,9 +6,12 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 
 import flask as fl
+from flask_cors import CORS
+
 
 
 app = fl.Flask(__name__)
+CORS(app)
 
 
 @app.route('/api/polus/transports/', methods=['GET'])

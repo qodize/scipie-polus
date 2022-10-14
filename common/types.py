@@ -36,6 +36,9 @@ class Order:
     def from_json(cls, data):
         data['start'] = dt.datetime.fromisoformat(data['start'])
         data['end'] = dt.datetime.fromisoformat(data['end'])
+        data['id'] = data.get('id', None)
+        data['driver_id'] = data.get('driver_id', None)
+        data['driver_id'] = data.get('status', None)
         return cls(**data)
 
     def to_json(self):

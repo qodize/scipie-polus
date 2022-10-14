@@ -71,3 +71,11 @@ class PG_Orders:
         longitude float,
         status varchar(100)
         )""")
+
+
+class PG_Transports:
+    @staticmethod
+    @postgres_wrapper
+    def get_list(cursor):
+        cursor.execute(f"""SELECT * FROM transports""")
+        return [Transport(*t) for t in cursor.fetchall()]

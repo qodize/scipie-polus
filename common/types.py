@@ -18,6 +18,10 @@ class Driver:
 @dataclasses.dataclass
 class Transport:
     type: str
+    amount: int
+
+    def to_json(self):
+        return self.__dict__
 
 
 @dataclasses.dataclass
@@ -42,5 +46,4 @@ class Order:
         return cls(**data)
 
     def to_json(self):
-        data = self.__dict__
-        return data
+        return self.__dict__

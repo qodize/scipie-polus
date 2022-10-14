@@ -7,7 +7,7 @@ sys.path.append(parent)
 
 import flask as fl
 from flask_cors import CORS
-
+from common import PG_Transports
 
 
 app = fl.Flask(__name__)
@@ -15,8 +15,10 @@ CORS(app)
 
 
 @app.route('/api/polus/transports/', methods=['GET'])
-def orders():
-    return [{'id': 0, 'type': 'Большая машина'}, {'id': 1, 'type': 'Машина поменьше'}, {'id': 2, 'type': 'Умная машина'}]
+def transports():
+    if fl.request.method == 'GET':
+        return [t.to_json for t in PG_Transports.get_list()]
+    return {}
 
 
 if __name__ == '__main__':

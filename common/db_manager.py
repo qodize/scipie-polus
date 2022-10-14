@@ -28,7 +28,7 @@ class PG_Orders:
         cursor.execute(f"""INSERT INTO orders
          VALUES (DEFAULT,
                  '{order.user_phone}',
-                 {order.driver_id if order.driver_id else "NULL"},
+                 '{order.driver_phone if order.driver_phone else ""}',
                  '{order.transport_type}',
                  '{order.start}',
                  '{order.end}',

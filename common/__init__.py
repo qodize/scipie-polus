@@ -1,2 +1,2 @@
 from .types import *
-from db_manager import *
+from .db_manager import *

@@ -12,7 +12,7 @@ from common import Order
 app = fl.Flask(__name__)
 
 
-@app.route('/api/polus/orders', methods=['POST', 'GET'])
+@app.route('/api/polus/orders/', methods=['POST', 'GET'])
 def orders():
     return fl.Response(status=201)
 

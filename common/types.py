@@ -39,6 +39,7 @@ class Order:
         transport = Transport(**data.pop('transport'))
         data['start'] = dt.datetime.fromisoformat(data['start'])
         data['end'] = dt.datetime.fromisoformat(data['end'])
+        data['status'] = data.get('status')
         return cls(id=data.pop('id', None), user=user, driver=driver, transport=transport, **data)
 
     def to_json(self):

@@ -28,7 +28,7 @@ class PG_Orders:
         cursor.execute(f"""INSERT INTO orders
          VALUES (DEFAULT,
                  {order.user.id},
-                 {order.driver.id},
+                 {order.driver.id if order.driver else None},
                  '{order.transport.type}',
                  '{order.start}',
                  '{order.end}',

@@ -22,7 +22,12 @@ def orders():
         order_id = PG_Orders.insert(raw_order)
         new_order = PG_Orders.get(order_id)
         return new_order.to_json()
-    return []
+    if fl.request.method == 'GET':
+        driver_phone = fl.request.args.get('driver_phone')
+        user_phone = fl.request.args.get('user_phone')
+        orders = PG_Orders.get_list(driver_phone, user_phone)
+        return [o.to_json for o in orders]
+    return {}
 
 
 if __name__ == '__main__':

@@ -48,11 +48,22 @@ class PG_Orders:
 
     @staticmethod
     @postgres_wrapper
+    def get_list(cursor, driver_phone=None, user_phone=None):
+        query = f"""SELECT * FROM orders WHERE id != null"""
+        if driver_phone:
+            query += f" AND driver_phone like '{driver_phone}'"
+        if user_phone:
+            query += f" AND user_phone like '{user_phone}'"
+        cursor.execute(query)
+        return [Order(**o) for o in cursor.fetchall()]
+
+    @staticmethod
+    @postgres_wrapper
     def create_table(cursor):
         cursor.execute("""CREATE TABLE IF NOT EXISTS orders (
         id serial PRIMARY KEY,
         user_phone varchar(100),
-        driver_id int,
+        driver_phone varchar(100),
         transport_type varchar(100),
         dtstart timestamp,
         dtend timestamp,

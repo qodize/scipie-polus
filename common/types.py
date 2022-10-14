@@ -24,7 +24,7 @@ class Transport:
 class Order:
     id: Optional[int]
     user_phone: str
-    driver_id: Optional[int]
+    driver_phone: Optional[str]
     transport_type: str
     start: dt.datetime
     end: dt.datetime
@@ -37,7 +37,7 @@ class Order:
         data['start'] = dt.datetime.fromisoformat(data['start'])
         data['end'] = dt.datetime.fromisoformat(data['end'])
         data['id'] = data.get('id', None)
-        data['driver_id'] = data.get('driver_id', None)
+        data['driver_phone'] = data.get('driver_phone', None)
         data['status'] = data.get('status', "unknown")
         return cls(**data)
 

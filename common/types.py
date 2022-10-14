@@ -16,6 +16,19 @@ class Driver:
 
 
 @dataclasses.dataclass
+class DriverSchedule:
+    driver_phone: str
+    start: dt.datetime
+    end: dt.datetime
+
+    def to_json(self):
+        data = self.__dict__
+        data['start'] = data['start'].isoformat()
+        data['end'] = data['end'].isoformat()
+        return data
+
+
+@dataclasses.dataclass
 class Transport:
     type: str
     amount: int

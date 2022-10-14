@@ -7,6 +7,7 @@ sys.path.append(parent)
 
 import flask as fl
 from flask_cors import CORS
+from common import PG_Drivers
 
 
 app = fl.Flask(__name__)
@@ -17,6 +18,13 @@ CORS(app)
 def drivers():
     if fl.request.method == 'GET':
         return []
+    return {}
+
+
+@app.route('/api/polus/drivers/schedule/<driver_phone>', methods=['GET'])
+def schedule(driver_phone):
+    if fl.request.method == 'GET':
+        return [s.to_json() for s in PG_Drivers.get_schedule(driver_phone)]
     return {}
 
 

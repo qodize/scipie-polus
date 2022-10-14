@@ -79,3 +79,26 @@ class PG_Transports:
     def get_list(cursor):
         cursor.execute(f"""SELECT * FROM transports""")
         return [Transport(*t) for t in cursor.fetchall()]
+
+
+class PG_Drivers:
+    @staticmethod
+    @postgres_wrapper
+    def get_driver_list(cursor):
+        cursor.execute(f"""SELECT * FROM drivers""")
+        return [Driver(*d) for d in cursor.fetchall()]
+
+    @staticmethod
+    @postgres_wrapper
+    def get_driver(cursor, driver_phone: str) -> Driver or None:
+        cursor.execute(f"""SELECT * FROM drivers WHERE driver_phone like '{driver_phone}'""")
+        res = cursor.fetchall()
+        if not res:
+            return None
+        return Driver(*res[0])
+
+    @staticmethod
+    @postgres_wrapper
+    def get_schedule(cursor, driver_phone):
+        cursor.execute(f"""SELECT * FROM drivers_schedule WHERE driver_phone like '{driver_phone}'""")
+        return [DriverSchedule(*s) for s in cursor.fetchall()]

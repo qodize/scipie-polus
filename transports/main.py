@@ -13,7 +13,7 @@ app = fl.Flask(__name__)
 
 @app.route('/api/polus/transports/types', methods=['GET'])
 def orders():
-    return [{'type': 'Большая машина'}, {'type': 'Машина поменьше'}, {'type': 'Умная машина'}]
+    return [{'id': 0, 'type': 'Большая машина'}, {'id': 1, 'type': 'Машина поменьше'}, {'id': 2, 'type': 'Умная машина'}]
 
 
 if __name__ == '__main__':

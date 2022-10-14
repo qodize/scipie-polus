@@ -24,7 +24,6 @@ def orders():
         return new_order.to_json()
     if fl.request.method == 'GET':
         driver_phone = fl.request.args.get('driver_phone')
-        print(driver_phone)
         user_phone = fl.request.args.get('user_phone')
         orders = PG_Orders.get_list(driver_phone, user_phone)
         return [o.to_json() for o in orders]

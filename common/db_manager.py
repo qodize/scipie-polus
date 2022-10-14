@@ -49,7 +49,7 @@ class PG_Orders:
     @staticmethod
     @postgres_wrapper
     def get_list(cursor, driver_phone=None, user_phone=None):
-        query = f"""SELECT * FROM orders WHERE id != null"""
+        query = f"""SELECT * FROM orders WHERE id >= 0"""
         if driver_phone:
             query += f" AND driver_phone like '{driver_phone}'"
         if user_phone:

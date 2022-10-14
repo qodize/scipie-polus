@@ -37,6 +37,7 @@ class PG_Orders:
                  '{order.status}')
          RETURNING orders.id""")
         order_id = cursor.fetchall()[0][0]
+        print(order_id)
         return PG_Orders.get(order_id)
 
     @staticmethod

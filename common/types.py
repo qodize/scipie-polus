@@ -37,6 +37,8 @@ class Order:
         user = User(**data.pop('user'))
         driver = Driver(**data.pop('driver')) if data.get('driver') else None
         transport = Transport(**data.pop('transport'))
+        data['start'] = dt.datetime.fromisoformat(data['start'])
+        data['end'] = dt.datetime.fromisoformat(data['end'])
         return cls(id=data.pop('id', None), user=user, driver=driver, transport=transport, **data)
 
     def to_json(self):

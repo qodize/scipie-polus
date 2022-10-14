@@ -3,7 +3,7 @@ from .types import *
 import datetime as dt
 from typing import List
 
-pg_database = 'hakaton'
+pg_database = 'polus'
 pg_username = 'postgres'
 pg_password = 'postgres'
 pg_host = '127.0.0.1'
@@ -45,3 +45,18 @@ class PG_Orders:
         cursor.execute(f"""SELECT * FROM orders WHERE id = {order_id}""")
         order = Order(*cursor.fetchall()[0])
         return order
+
+    @staticmethod
+    @postgres_wrapper
+    def create_table(cursor):
+        cursor.execute("""CREATE TABLE IF NOT EXISTS orders (
+        id serial PRIMARY KEY,
+        user_id int,
+        driver_id int,
+        transport_type varchar(100),
+        dtstart timestamp,
+        dtend timestamp,
+        latitude float,
+        longitude float,
+        status varchar(100)
+        )""")

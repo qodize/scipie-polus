@@ -42,6 +42,8 @@ class PG_Orders:
     @staticmethod
     @postgres_wrapper
     def get(cursor, order_id: int) -> Order:
+        cursor.execute(f"""SELECT * FROM orders""")
+        print(cursor.fetchall())
         cursor.execute(f"""SELECT * FROM orders WHERE id = {order_id}""")
         order = Order(*cursor.fetchall()[0])
         return order

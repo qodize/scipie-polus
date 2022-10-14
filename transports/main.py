@@ -17,7 +17,7 @@ CORS(app)
 @app.route('/api/polus/transports/', methods=['GET'])
 def transports():
     if fl.request.method == 'GET':
-        return [t.to_json for t in PG_Transports.get_list()]
+        return [t.to_json() for t in PG_Transports.get_list()]
     return {}
 
 

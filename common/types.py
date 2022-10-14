@@ -23,7 +23,7 @@ class Transport:
 @dataclasses.dataclass
 class Order:
     id: Optional[int]
-    user_id: int
+    user_phone: str
     driver_id: Optional[int]
     transport_type: str
     start: dt.datetime

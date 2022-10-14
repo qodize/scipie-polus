@@ -27,7 +27,7 @@ class PG_Orders:
     def insert(cursor, order: Order) -> int:
         cursor.execute(f"""INSERT INTO orders
          VALUES (DEFAULT,
-                 {order.user_id},
+                 '{order.user_phone}',
                  {order.driver_id if order.driver_id else "NULL"},
                  '{order.transport_type}',
                  '{order.start}',
@@ -51,7 +51,7 @@ class PG_Orders:
     def create_table(cursor):
         cursor.execute("""CREATE TABLE IF NOT EXISTS orders (
         id serial PRIMARY KEY,
-        user_id int,
+        user_phone varchar(100),
         driver_id int,
         transport_type varchar(100),
         dtstart timestamp,

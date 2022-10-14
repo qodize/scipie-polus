@@ -8,15 +8,20 @@ sys.path.append(parent)
 import flask as fl
 from flask_cors import CORS
 
-from common import Order
+from common import PG_Orders, Order
 
 
 app = fl.Flask(__name__)
 CORS(app)
 
+
 @app.route('/api/polus/orders/', methods=['POST', 'GET'])
 def orders():
-    return fl.Response(status=201)
+    if fl.request.method == 'POST':
+        raw_order = Order.from_json(fl.request.json)
+        new_order = PG_Orders.insert(raw_order)
+        return new_order.to_json()
+    return []
 
 
 if __name__ == '__main__':

@@ -38,3 +38,10 @@ class Order:
         driver = Driver(**data.pop('driver')) if data.get('driver') else None
         transport = Transport(**data.pop('transport'))
         return cls(id=data.pop('id', None), user=user, driver=driver, transport=transport, **data)
+
+    def to_json(self):
+        data = self.__dict__
+        data['user'] = self.user.__dict__
+        data['driver'] = self.driver.__dict__ if self.driver else None
+        data['transport'] = self.transport.__dict__
+        return data

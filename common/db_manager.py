@@ -25,6 +25,17 @@ class PG_Orders:
     @staticmethod
     @postgres_wrapper
     def insert(cursor, order: Order) -> Order:
+        print(f"""INSERT INTO orders
+         VALUES (DEFAULT,
+                 {order.user.id},
+                 {order.driver.id if order.driver else "NULL"},
+                 '{order.transport.type}',
+                 '{order.start}',
+                 '{order.end}',
+                 {order.latitude},
+                 {order.longitude},
+                 '{order.status}')
+         RETURNING orders.id""")
         cursor.execute(f"""INSERT INTO orders
          VALUES (DEFAULT,
                  {order.user.id},

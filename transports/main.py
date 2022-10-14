@@ -11,7 +11,7 @@ import flask as fl
 app = fl.Flask(__name__)
 
 
-@app.route('/api/polus/transports', methods=['GET'])
+@app.route('/api/polus/transports/', methods=['GET'])
 def orders():
     return [{'id': 0, 'type': 'Большая машина'}, {'id': 1, 'type': 'Машина поменьше'}, {'id': 2, 'type': 'Умная машина'}]
 

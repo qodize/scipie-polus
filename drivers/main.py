@@ -51,6 +51,7 @@ def all_schedules():
         schedule = DriverSchedule(data['driver_phone'],
                                   dt.datetime.fromisoformat(data['start']), dt.datetime.fromisoformat(data['end']))
         PG_Drivers.create_schedule(schedule)
+        return schedule.to_json()
     return {}
 
 

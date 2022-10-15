@@ -16,7 +16,7 @@ app = fl.Flask(__name__)
 CORS(app)
 
 
-@app.route('/api/polus/orders/', methods=['POST', 'GET'])
+@app.route('/api/polus/orders/', methods=['GET', 'POST', 'PATCH'])
 def orders():
     if fl.request.method == 'POST':
         raw_order = Order.from_json(fl.request.json)
@@ -83,6 +83,18 @@ def orders():
         user_phone = fl.request.args.get('user_phone')
         orders = PG_Orders.get_list(driver_phone, user_phone)
         return [o.to_json() for o in orders]
+
+    if fl.request.method == 'PATCH':
+        data = fl.request.json
+        order_id = data.get('id')
+        status = data.get('status')
+        if not status:
+            return fl.Response(status=400)
+        order = PG_Orders.get(order_id)
+        order.status = status
+        PG_Orders.update(order)
+        return order.to_json()
+
     return {}
 
 

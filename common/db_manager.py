@@ -58,7 +58,7 @@ class PG_Orders:
     @staticmethod
     @postgres_wrapper
     def get_list(cursor, driver_phone=None, user_phone=None, transport_type=None, start=None, end=None):
-        query = f"""SELECT * FROM orders WHERE id >= 0"""
+        query = f"""SELECT * FROM orders WHERE id >= 0 AND status != 'cancelled'"""
         if driver_phone:
             query += f" AND driver_phone like '{driver_phone}'"
         if user_phone:

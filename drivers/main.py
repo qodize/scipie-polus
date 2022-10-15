@@ -19,11 +19,11 @@ CORS(app)
 def drivers():
     if fl.request.method == 'POST':
         data = fl.request.json
-        driver = PG_Drivers.get_driver(data['phone_number'])
+        driver = PG_Drivers.get_driver(data['phone'])
         if not driver:
-            driver = Driver(None, data['phone_number'])
+            driver = Driver(None, data['phone'])
             driver_id = PG_Drivers.create_driver(driver)
-        driver = PG_Drivers.get_driver(data['phone_number'])
+        driver = PG_Drivers.get_driver(data['phone'])
         return driver.to_json()
     return []
 

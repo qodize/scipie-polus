@@ -1,5 +1,6 @@
 import os.path
 import sys
+import datetime as dt
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -7,11 +8,31 @@ sys.path.append(parent)
 
 import flask as fl
 from flask_cors import CORS
-from common import PG_Transports
+from common import PG_Transports, PG_Orders, Transport
 
 
 app = fl.Flask(__name__)
 CORS(app)
+
+
+def is_available_transport(start: dt.datetime, end: dt.datetime, transport: Transport) -> bool:
+    orders = PG_Orders.get_list(transport_type=transport.type, start=start, end=end)
+    count = transport.amount
+    events = []
+    for order in orders:
+        events.append(('start', order.start))
+        events.append(('end', order.end))
+
+    for e in sorted(events, key=lambda p: (p[1], 0 if p[0] == 'start' else 1)):
+        if e[0] == 'start':
+            count -= 1
+        if e[0] == 'end':
+            count += 1
+        if count <= 0:
+            break
+    if count <= 0:
+        return False
+    return True
 
 
 @app.route('/api/polus/transports/', methods=['GET'])
@@ -19,6 +40,30 @@ def transports():
     if fl.request.method == 'GET':
         return [t.to_json() for t in PG_Transports.get_list()]
     return {}
+
+
+@app.route('/api/polus/transports/available', methods=['GET'])
+def available():
+    transports = PG_Transports.get_list()
+    start = dt.datetime.now()
+    end = start + dt.timedelta(hours=1)
+    available_transports = []
+    for transport in transports:
+        if is_available_transport(start, end, transport):
+            available_transports.append(transport)
+    return [t.to_json() for t in available_transports]
+
+
+@app.route('/api/polus/transports/available/', methods=['GET'])
+def available_type():
+    start = dt.datetime.fromisoformat(fl.request.args.get('start'))
+    end = dt.datetime.fromisoformat(fl.request.args.get('end'))
+    transport_type = fl.request.args.get('transport_type', '')
+    transport = PG_Transports.get(transport_type)
+    if not all([start, end, transport]):
+        return fl.Response(status=400)
+
+    return {'is_available': is_available_transport(start, end, transport)}
 
 
 @app.route('/api/polus/transports/<transport_type>', methods=['GET'])

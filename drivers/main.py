@@ -25,8 +25,14 @@ def drivers():
             driver_id = PG_Drivers.create_driver(driver)
         driver = PG_Drivers.get_driver(data['phone_number'])
         return driver.to_json()
+    return []
+
+
+@app.route('/api/polus/drivers/<driver_phone>', methods=['GET'])
+def single_driver(driver_phone):
     if fl.request.method == 'GET':
-        return []
+        driver = PG_Drivers.get_driver(driver_phone)
+        return driver.to_json()
     return {}
 
 

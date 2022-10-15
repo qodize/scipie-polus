@@ -50,7 +50,7 @@ def orders():
             PG_Orders.update(new_order)
             return new_order.to_json()
 
-        query = 'https://' + requests.utils.quote(f'scipie.ru/api/polus/drivers/schedule/?start={new_order.start.isoformat()}&end={new_order.end.isoformat()}')
+        query = f'https://scipie.ru/api/polus/drivers/schedule/?start={new_order.start.isoformat()}&end={new_order.end.isoformat()}'
         schedules_res = requests.get(query)
         if schedules_res.status_code != 200:
             print(f'SCHEDULES ERROR {schedules_res.status_code=}')

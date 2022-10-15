@@ -138,7 +138,7 @@ class PG_Drivers:
     @staticmethod
     @postgres_wrapper
     def create_schedule(cursor, schedule: DriverSchedule):
-        cursor.execute(f"""INSERT INTO driver_schedule
+        cursor.execute(f"""INSERT INTO drivers_schedule
          VALUES ('{schedule.driver_phone}', '{schedule.start}', '{schedule.end}')""")
 
     @staticmethod

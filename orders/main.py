@@ -59,7 +59,7 @@ def orders():
             PG_Orders.update(new_order)
             return new_order.to_json()
 
-        print(schedules_res)
+        print(schedules_res.json())
         schedules = [DriverSchedule(*s) for s in schedules_res.json()]
         for schedule in schedules:
             orders = PG_Orders.get_list(driver_phone=schedule.driver_phone, start=schedule.start, end=schedule.end)

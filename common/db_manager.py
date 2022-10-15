@@ -45,7 +45,7 @@ class PG_Orders:
         cursor.execute(f"""UPDATE orders
         SET
         status = '{order.status}',
-        driver_phone = {order.driver_phone if order.driver_phone else ""}
+        driver_phone = '{order.driver_phone if order.driver_phone else ""}'
         WHERE id = {order.id}""")
 
     @staticmethod

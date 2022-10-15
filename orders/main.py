@@ -83,7 +83,7 @@ def orders():
         try:
             start = new_order.start
             end = new_order.end
-            border = start + dt.timedelta(hours=3)
+            border = start + dt.timedelta(hours=5)
             while not (driver_phone := find_available_driver(start, end)):
                 start += dt.timedelta(minutes=30)
                 end += dt.timedelta(minutes=30)

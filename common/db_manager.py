@@ -67,7 +67,6 @@ class PG_Orders:
             query += f" AND transport_type like '{transport_type}'"
         if start and end:
             query += f" AND NOT ('{end}' <= dtstart OR dtend <= '{start}')"
-        print(query)
         cursor.execute(query)
         return [Order(*o) for o in cursor.fetchall()]
 

@@ -54,12 +54,10 @@ def orders():
         schedules_res = requests.get(query)
         if schedules_res.status_code != 200:
             print(f'SCHEDULES ERROR {schedules_res.status_code=}')
-            print(query)
             new_order.status = "driver was not assigned"
             PG_Orders.update(new_order)
             return new_order.to_json()
 
-        print(schedules_res.json())
         schedules = [DriverSchedule.from_json(s) for s in schedules_res.json()]
         for schedule in schedules:
             orders = PG_Orders.get_list(driver_phone=schedule.driver_phone, start=schedule.start, end=schedule.end)

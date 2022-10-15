@@ -32,7 +32,7 @@ def drivers():
 def single_driver(driver_phone):
     if fl.request.method == 'GET':
         driver = PG_Drivers.get_driver(driver_phone)
-        return driver.to_json()
+        return driver.to_json() if driver else fl.Response(status=404)
     return {}
 
 

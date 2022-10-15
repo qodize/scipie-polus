@@ -80,6 +80,15 @@ class PG_Transports:
         cursor.execute(f"""SELECT * FROM transports""")
         return [Transport(*t) for t in cursor.fetchall()]
 
+    @staticmethod
+    @postgres_wrapper
+    def get(cursor, transport_type: str) -> Transport or None:
+        cursor.execute(f"""SELECT * FROM transports WHERE type like '{transport_type}'""")
+        res = cursor.fetchall()
+        if res:
+            return Transport(*res[0])
+        return None
+
 
 class PG_Drivers:
     @staticmethod

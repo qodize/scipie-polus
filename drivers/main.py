@@ -46,18 +46,18 @@ def all_schedules():
         start = dt.datetime.fromisoformat(start) if start else None
         end = dt.datetime.fromisoformat(end) if end else None
         return [s.to_json() for s in PG_Drivers.get_schedule(start, end)]
+    if fl.request.method == 'POST':
+        data = fl.request.json
+        schedule = DriverSchedule(data['driver_phone'],
+                                  dt.datetime.fromisoformat(data['start']), dt.datetime.fromisoformat(data['end']))
+        PG_Drivers.create_schedule(schedule)
     return {}
 
 
-@app.route('/api/polus/drivers/<driver_phone>/schedule/', methods=['GET', 'POST'])
+@app.route('/api/polus/drivers/<driver_phone>/schedule/', methods=['GET'])
 def driver_schedule(driver_phone):
     if fl.request.method == 'GET':
         return [s.to_json() for s in PG_Drivers.get_driver_schedule(driver_phone)]
-    if fl.request.method == 'POST':
-        data = fl.request.json
-        schedule = DriverSchedule(driver_phone,
-                                  dt.datetime.fromisoformat(data['start']), dt.datetime.fromisoformat(data['end']))
-        PG_Drivers.create_schedule(schedule)
     return {}
 
 

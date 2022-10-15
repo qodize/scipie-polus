@@ -21,10 +21,19 @@ def drivers():
     return {}
 
 
-@app.route('/api/polus/drivers/schedule/<driver_phone>', methods=['GET'])
-def schedule(driver_phone):
+@app.route('/api/polus/drivers/schedule/', methods=['GET'])
+def all_schedules():
     if fl.request.method == 'GET':
-        return [s.to_json() for s in PG_Drivers.get_schedule(driver_phone)]
+        start = fl.request.args.get('start')
+        end = fl.request.args.get('end')
+        return [s.to_json() for s in PG_Drivers.get_schedule(start, end)]
+    return {}
+
+
+@app.route('/api/polus/drivers/schedule/<driver_phone>', methods=['GET'])
+def driver_schedule(driver_phone):
+    if fl.request.method == 'GET':
+        return [s.to_json() for s in PG_Drivers.get_driver_schedule(driver_phone)]
     return {}
 
 

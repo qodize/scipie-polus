@@ -25,6 +25,8 @@ def drivers():
             driver_id = PG_Drivers.create_driver(driver)
         driver = PG_Drivers.get_driver(data['phone'])
         return driver.to_json()
+    if fl.request.method == 'GET':
+        return [d.to_json() for d in PG_Drivers.get_driver_list()]
     return []
 
 

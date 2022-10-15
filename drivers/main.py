@@ -38,7 +38,7 @@ def single_driver(driver_phone):
     return {}
 
 
-@app.route('/api/polus/drivers/schedule/', methods=['GET'])
+@app.route('/api/polus/drivers/schedule/', methods=['GET', 'POST'])
 def all_schedules():
     if fl.request.method == 'GET':
         start = fl.request.args.get('start')

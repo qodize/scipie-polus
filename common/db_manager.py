@@ -102,7 +102,7 @@ class PG_Drivers:
     def get_schedule(cursor, start: dt.datetime = None, end: dt.datetime = None):
         query = f"""SELECT * FROM drivers_schedule"""
         if start and end:
-            query += f""" WHERE dtstart <= {start} AND {end} <= dtend"""
+            query += f""" WHERE dtstart <= '{start}' AND '{end}' <= dtend"""
         cursor.execute(query)
         return [DriverSchedule(*s) for s in cursor.fetchall()]
 

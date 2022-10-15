@@ -15,7 +15,7 @@ app = fl.Flask(__name__)
 CORS(app)
 
 
-def is_available_transport(start: dt.datetime, end: dt.datetime, transport: Transport) -> bool:
+def is_available_transport(start: dt.datetime, end: dt.datetime, transport: Transport) -> Transport:
     orders = PG_Orders.get_list(transport_type=transport.type, start=start, end=end)
     count = transport.amount
     events = []
@@ -30,9 +30,8 @@ def is_available_transport(start: dt.datetime, end: dt.datetime, transport: Tran
             count += 1
         if count <= 0:
             break
-    if count <= 0:
-        return False
-    return True
+    transport.amount = count
+    return transport
 
 
 @app.route('/api/polus/transports/', methods=['GET'])
@@ -52,7 +51,7 @@ def available():
     if any([start, end, transport]) and not all([start, end, transport]):
         return fl.Response(status=400)
     if all([start, end, transport]):
-        if is_available_transport(start, end, transport):
+        if is_available_transport(start, end, transport).amount > 0:
             return [transport.to_json()]
         else:
             return []
@@ -62,7 +61,8 @@ def available():
     end = start + dt.timedelta(hours=1)
     available_transports = []
     for transport in transports:
-        if is_available_transport(start, end, transport):
+        available_transport = is_available_transport(start, end, transport)
+        if available_transport.amount > 0:
             available_transports.append(transport)
     return [t.to_json() for t in available_transports]
 

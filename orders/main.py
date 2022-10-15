@@ -20,7 +20,7 @@ CORS(app)
 def orders():
     if fl.request.method == 'POST':
         raw_order = Order.from_json(fl.request.json)
-        query = requests.utils.quote(f'https://scipie.ru/api/polus/transports/{raw_order.transport_type}')
+        query = 'https://' + requests.utils.quote(f'scipie.ru/api/polus/transports/{raw_order.transport_type}')
         transports_res = requests.get(query)
 
         if transports_res.status_code != 200:
@@ -50,7 +50,7 @@ def orders():
             PG_Orders.update(new_order)
             return new_order.to_json()
 
-        query = requests.utils.quote(f'https://scipie.ru/api/polus/drivers/schedule/?start={new_order.start.isoformat()}&end={new_order.end.isoformat()}')
+        query = 'https://' + requests.utils.quote(f'scipie.ru/api/polus/drivers/schedule/?start={new_order.start.isoformat()}&end={new_order.end.isoformat()}')
         schedules_res = requests.get(query)
         if schedules_res.status_code != 200:
             print(f'SCHEDULES ERROR {schedules_res.status_code=}')

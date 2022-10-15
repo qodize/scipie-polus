@@ -41,7 +41,7 @@ def transports():
     return {}
 
 
-@app.route('/api/polus/transports/available', methods=['GET'])
+@app.route('/api/polus/transports/available/', methods=['GET'])
 def available():
     start = dt.datetime.fromisoformat(fl.request.args.get('start'))
     end = dt.datetime.fromisoformat(fl.request.args.get('end'))

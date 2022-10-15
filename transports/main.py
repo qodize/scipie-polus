@@ -43,8 +43,8 @@ def transports():
 
 @app.route('/api/polus/transports/available/', methods=['GET'])
 def available():
-    start = dt.datetime.fromisoformat(fl.request.args.get('start'))
-    end = dt.datetime.fromisoformat(fl.request.args.get('end'))
+    start = dt.datetime.fromisoformat(fl.request.args.get('start')) if fl.request.args.get('start') else None
+    end = dt.datetime.fromisoformat(fl.request.args.get('end')) if fl.request.args.get('end') else None
     transport_type = fl.request.args.get('transport_type', '')
     transport = PG_Transports.get(transport_type)
 

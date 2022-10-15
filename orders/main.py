@@ -26,7 +26,6 @@ def is_available_transport(start: dt.datetime, end: dt.datetime, transport: Tran
         events.append(('end', order.end))
 
     for e in sorted(events, key=lambda p: (p[1], 0 if p[0] == 'start' else 1)):
-        print(count)
         if e[0] == 'start':
             count -= 1
         if e[0] == 'end':

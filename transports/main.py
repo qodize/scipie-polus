@@ -24,7 +24,6 @@ def transports():
 @app.route('/api/polus/transports/<transport_type>', methods=['GET'])
 def single_transport(transport_type):
     if fl.request.method == 'GET':
-        print(transport_type)
         transport = PG_Transports.get(transport_type=transport_type)
         return transport.to_json() if transport else fl.Response(status=404)
     return {}

@@ -1,5 +1,6 @@
 import os.path
 import sys
+import datetime as dt
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -26,6 +27,8 @@ def all_schedules():
     if fl.request.method == 'GET':
         start = fl.request.args.get('start')
         end = fl.request.args.get('end')
+        start = dt.datetime.fromisoformat(start) if start else None
+        end = dt.datetime.fromisoformat(end) if end else None
         return [s.to_json() for s in PG_Drivers.get_schedule(start, end)]
     return {}
 

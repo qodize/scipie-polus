@@ -24,6 +24,12 @@ class DriverSchedule:
     start: dt.datetime
     end: dt.datetime
 
+    @classmethod
+    def from_json(cls, data):
+        data['start'] = dt.datetime.fromisoformat(data['start'])
+        data['end'] = dt.datetime.fromisoformat(data['end'])
+        return cls(**data)
+
     def to_json(self):
         data = self.__dict__
         data['start'] = data['start'].isoformat()

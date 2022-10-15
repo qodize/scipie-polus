@@ -44,6 +44,19 @@ def transports():
 
 @app.route('/api/polus/transports/available', methods=['GET'])
 def available():
+    start = dt.datetime.fromisoformat(fl.request.args.get('start'))
+    end = dt.datetime.fromisoformat(fl.request.args.get('end'))
+    transport_type = fl.request.args.get('transport_type', '')
+    transport = PG_Transports.get(transport_type)
+
+    if any([start, end, transport]) and not all([start, end, transport]):
+        return fl.Response(status=400)
+    if all([start, end, transport]):
+        if is_available_transport(start, end, transport):
+            return [transport.to_json()]
+        else:
+            return []
+
     transports = PG_Transports.get_list()
     start = dt.datetime.now()
     end = start + dt.timedelta(hours=1)
@@ -52,18 +65,6 @@ def available():
         if is_available_transport(start, end, transport):
             available_transports.append(transport)
     return [t.to_json() for t in available_transports]
-
-
-@app.route('/api/polus/transports/available/', methods=['GET'])
-def available_type():
-    start = dt.datetime.fromisoformat(fl.request.args.get('start'))
-    end = dt.datetime.fromisoformat(fl.request.args.get('end'))
-    transport_type = fl.request.args.get('transport_type', '')
-    transport = PG_Transports.get(transport_type)
-    if not all([start, end, transport]):
-        return fl.Response(status=400)
-
-    return {'is_available': is_available_transport(start, end, transport)}
 
 
 @app.route('/api/polus/transports/<transport_type>', methods=['GET'])

@@ -137,6 +137,12 @@ class PG_Drivers:
 
     @staticmethod
     @postgres_wrapper
+    def create_schedule(cursor, schedule: DriverSchedule):
+        cursor.execute(f"""INSERT INTO driver_schedule
+         VALUES ('{schedule.driver_phone}', '{schedule.start}', '{schedule.end}')""")
+
+    @staticmethod
+    @postgres_wrapper
     def get_driver_schedule(cursor, driver_phone):
         cursor.execute(f"""SELECT * FROM drivers_schedule WHERE driver_phone like '{driver_phone}'""")
         return [DriverSchedule(*s) for s in cursor.fetchall()]

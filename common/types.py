@@ -5,14 +5,17 @@ from typing import Tuple, Optional
 
 @dataclasses.dataclass
 class User:
-    id: int
+    id: Optional[int]
     phone: str
 
 
 @dataclasses.dataclass
 class Driver:
-    id: int
+    id: Optional[int]
     phone: str
+
+    def to_json(self):
+        return self.__dict__
 
 
 @dataclasses.dataclass

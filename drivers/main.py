@@ -8,15 +8,23 @@ sys.path.append(parent)
 
 import flask as fl
 from flask_cors import CORS
-from common import PG_Drivers
+from common import PG_Drivers, Driver
 
 
 app = fl.Flask(__name__)
 CORS(app)
 
 
-@app.route('/api/polus/drivers/', methods=['GET'])
+@app.route('/api/polus/drivers/', methods=['GET', 'POST'])
 def drivers():
+    if fl.request.method == 'POST':
+        data = fl.request.json
+        driver = PG_Drivers.get_driver(data['phone_number'])
+        if not driver:
+            driver = Driver(None, data['phone_number'])
+            driver_id = PG_Drivers.create_driver(driver)
+        driver = PG_Drivers.get_driver(data['phone_number'])
+        return driver.to_json()
     if fl.request.method == 'GET':
         return []
     return {}

@@ -107,6 +107,12 @@ class PG_Transports:
 class PG_Drivers:
     @staticmethod
     @postgres_wrapper
+    def create_driver(cursor, driver: Driver) -> int:
+        cursor.execute(f"""INSERT INTO drivers VALUES (DEFAULT, '{driver.phone}') RETURNING id""")
+        return cursor.fetchall()[0][0]
+
+    @staticmethod
+    @postgres_wrapper
     def get_driver_list(cursor):
         cursor.execute(f"""SELECT * FROM drivers""")
         return [Driver(*d) for d in cursor.fetchall()]

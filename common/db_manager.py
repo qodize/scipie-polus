@@ -43,10 +43,9 @@ class PG_Orders:
     @postgres_wrapper
     def update(cursor, order: Order):
         cursor.execute(f"""UPDATE orders
-        SET (
-        status='{order.status}',
-        driver_phone={order.driver_phone if order.driver_phone else ""}
-        )
+        SET
+        status = '{order.status}',
+        driver_phone = {order.driver_phone if order.driver_phone else ""}
         WHERE id = {order.id}""")
 
     @staticmethod

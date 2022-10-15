@@ -120,7 +120,7 @@ class PG_Drivers:
     @staticmethod
     @postgres_wrapper
     def get_driver(cursor, driver_phone: str) -> Driver or None:
-        cursor.execute(f"""SELECT * FROM drivers WHERE phone like '{driver_phone}'""")
+        cursor.execute(f"""SELECT * FROM drivers WHERE phone_number like '{driver_phone}'""")
         res = cursor.fetchall()
         if not res:
             return None

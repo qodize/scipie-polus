@@ -1,5 +1,6 @@
 import os.path
 import sys
+import datetime as dt
 import requests
 
 current = os.path.dirname(os.path.realpath(__file__))
@@ -16,6 +17,43 @@ app = fl.Flask(__name__)
 CORS(app)
 
 
+def is_available_transport(start: dt.datetime, end: dt.datetime, transport: Transport) -> bool:
+    orders = PG_Orders.get_list(transport_type=transport.type, start=start, end=end)
+    count = transport.amount
+    events = []
+    for order in orders:
+        events.append(('start', order.start))
+        events.append(('end', order.end))
+
+    for e in sorted(events, key=lambda p: p[1]):
+        if e[1] == 'start':
+            count -= 1
+        if e[1] == 'end':
+            count += 1
+        if count <= 0:
+            break
+    if count <= 0:
+        return False
+    return True
+
+
+def find_available_driver(start: dt.datetime, end: dt.datetime) -> str or None:
+    query = f'https://scipie.ru/api/polus/drivers/schedule/?start={start.isoformat()}&end={end.isoformat()}'
+    schedules_res = requests.get(query)
+    if schedules_res.status_code != 200:
+        raise requests.HTTPError()
+
+    schedules = [DriverSchedule.from_json(s) for s in schedules_res.json()]
+    for schedule in schedules:
+        orders = PG_Orders.get_list(driver_phone=schedule.driver_phone, start=schedule.start, end=schedule.end)
+        for order in orders:
+            if not (end < order.start or order.end < start):
+                break
+        else:
+            return schedule.driver_phone
+    return None
+
+
 @app.route('/api/polus/orders/', methods=['GET', 'POST', 'PATCH'])
 def orders():
     if fl.request.method == 'POST':
@@ -30,53 +68,46 @@ def orders():
 
         order_id = PG_Orders.insert(raw_order)
         new_order = PG_Orders.get(order_id)
-        orders = PG_Orders.get_list(transport_type=transport.type, start=new_order.start, end=new_order.end)
-        count = transport.amount
-        events = []
-        for order in orders:
-            events.append(('start', order.start))
-            events.append(('end', order.end))
+        start = new_order.start
+        end = new_order.end
+        while not (is_available := is_available_transport(start, end, transport)):
+            start += dt.timedelta(minutes=30)
+            end += dt.timedelta(minutes=30)
 
-        for e in sorted(events, key=lambda p: p[1]):
-            if e[1] == 'start':
-                count -= 1
-            if e[1] == 'end':
-                count += 1
-            if count <= 0:
-                break
-
-        if count <= 0:
+        if start != new_order.start:
             new_order.status = 'transport unavailable'
             PG_Orders.update(new_order)
-            return new_order.to_json()
-
-        query = f'https://scipie.ru/api/polus/drivers/schedule/?start={new_order.start.isoformat()}&end={new_order.end.isoformat()}'
-        schedules_res = requests.get(query)
-        if schedules_res.status_code != 200:
-            print(f'SCHEDULES ERROR {schedules_res.status_code=}')
+            return {"order": new_order.to_json(),
+                    'suggestion_start': start.isoformat(),
+                    'suggestion_finish': end.isoformat()}
+        try:
+            start = new_order.start
+            end = new_order.end
+            border = start + dt.timedelta(hours=3)
+            while not (driver_phone := find_available_driver(start, end)):
+                start += dt.timedelta(minutes=30)
+                end += dt.timedelta(minutes=30)
+                if start >= border:
+                    break
+        except requests.HTTPError as e:
+            print(f'SCHEDULES ERROR')
             new_order.status = "driver was not assigned"
             PG_Orders.update(new_order)
-            return new_order.to_json()
+            return {'order': new_order.to_json()}
 
-        schedules = [DriverSchedule.from_json(s) for s in schedules_res.json()]
-        for schedule in schedules:
-            orders = PG_Orders.get_list(driver_phone=schedule.driver_phone, start=schedule.start, end=schedule.end)
-            for order in orders:
-                if not (new_order.end < order.start or order.end < new_order.start):
-                    break
-            else:
-                new_order.driver_phone = schedule.driver_phone
-                break
-
-        if not new_order.driver_phone:
-            print("NO AVAILABLE DRIVERS")
+        if not driver_phone:
             new_order.status = "no available drivers"
             PG_Orders.update(new_order)
-            return new_order.to_json()
+            return {'order': new_order.to_json()}
+        elif start != new_order.start:
+            new_order.status = "no available drivers"
+            PG_Orders.update(new_order)
+            return {'order': new_order.to_json(), 'suggestion_start': start, 'suggestion_end': end}
 
         new_order.status = "assigned"
+        new_order.driver_phone = driver_phone
         PG_Orders.update(new_order)
-        return new_order.to_json()
+        return {'order': new_order.to_json()}
 
     if fl.request.method == 'GET':
         driver_phone = fl.request.args.get('driver_phone')

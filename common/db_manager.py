@@ -41,6 +41,16 @@ class PG_Orders:
 
     @staticmethod
     @postgres_wrapper
+    def update(cursor, order: Order):
+        cursor.execute(f"""UPDATE orders
+        SET (
+        status='{order.status}',
+        driver_phone={order.driver_phone if order.driver_phone else ""}
+        )
+        WHERE id = {order.id}""")
+
+    @staticmethod
+    @postgres_wrapper
     def get(cursor, order_id: int) -> Order:
         cursor.execute(f"""SELECT * FROM orders WHERE id = {order_id}""")
         order = Order(*cursor.fetchall()[0])

@@ -48,6 +48,7 @@ def all_schedules():
         schedules = PG_Drivers.get_schedule()
         nice = []
         for s in schedules:
+            print(s.start, start, end. s.end)
             if s.start <= start and end <= s.end:
                 nice.append(s)
         return [s.to_json() for s in nice]

@@ -131,11 +131,8 @@ class PG_Drivers:
         query = f"""SELECT * FROM drivers_schedule"""
         if start and end:
             query += f""" WHERE dtstart <= '{start}' AND '{end}' <= dtend"""
-        print(query)
         cursor.execute(query)
-        res = cursor.fetchall()
-        print(res)
-        return [DriverSchedule(*s) for s in res]
+        return [DriverSchedule(*s) for s in cursor.fetchall()]
 
     @staticmethod
     @postgres_wrapper

@@ -50,6 +50,7 @@ def all_schedules():
         nice = []
         for s in schedules:
             print(s.start, start, end, s.end)
+            print(s.start <= start, end <= s.end)
             if s.start <= start and end <= s.end:
                 nice.append(s)
         return [s.to_json() for s in nice]

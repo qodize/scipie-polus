@@ -32,8 +32,8 @@ class DriverSchedule:
 
     def to_json(self):
         data = self.__dict__
-        data['start'] = data['start'].isoformat()
-        data['end'] = data['end'].isoformat()
+        data['start'] = data.pop('start').isoformat()
+        data['end'] = data.pop('end').isoformat()
         return data
 
 

@@ -26,8 +26,8 @@ class DriverSchedule:
 
     @classmethod
     def from_json(cls, data):
-        data['start'] = dt.datetime.fromisoformat(data['start'])
-        data['end'] = dt.datetime.fromisoformat(data['end'])
+        data['start'] = dt.datetime.fromisoformat(data['start'].strip('Z'))
+        data['end'] = dt.datetime.fromisoformat(data['end'].strip('Z'))
         return cls(**data)
 
     def to_json(self):
@@ -60,8 +60,8 @@ class Order:
 
     @classmethod
     def from_json(cls, data):
-        data['start'] = dt.datetime.fromisoformat(data['start'])
-        data['end'] = dt.datetime.fromisoformat(data['end'])
+        data['start'] = dt.datetime.fromisoformat(data['start'].strip('Z'))
+        data['end'] = dt.datetime.fromisoformat(data['end'].strip('Z'))
         data['id'] = data.get('id', None)
         data['driver_phone'] = data.get('driver_phone', None)
         data['status'] = data.get('status', "unknown")

@@ -69,7 +69,6 @@ class Order:
 
     def to_json(self):
         data = self.__dict__
-        print(data)
         data['start'] = data['start'].isoformat()
         data['end'] = data['end'].isoformat()
         return data

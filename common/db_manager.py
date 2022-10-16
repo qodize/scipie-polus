@@ -133,7 +133,9 @@ class PG_Drivers:
             query += f""" WHERE dtstart <= '{start}' AND '{end}' <= dtend"""
         print(query)
         cursor.execute(query)
-        return [DriverSchedule(*s) for s in cursor.fetchall()]
+        res = cursor.fetchall()
+        print(res)
+        return [DriverSchedule(*s) for s in res]
 
     @staticmethod
     @postgres_wrapper

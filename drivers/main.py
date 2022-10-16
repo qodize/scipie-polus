@@ -46,6 +46,7 @@ def all_schedules():
         start = dt.datetime.fromisoformat(start) if start else None
         end = dt.datetime.fromisoformat(end) if end else None
         schedules = PG_Drivers.get_schedule()
+        print(schedules)
         nice = []
         for s in schedules:
             print(s.start, start, end. s.end)

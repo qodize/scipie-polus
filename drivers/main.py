@@ -45,7 +45,12 @@ def all_schedules():
         end = fl.request.args.get('end')
         start = dt.datetime.fromisoformat(start) if start else None
         end = dt.datetime.fromisoformat(end) if end else None
-        return [s.to_json() for s in PG_Drivers.get_schedule(start, end)]
+        schedules = PG_Drivers.get_schedule()
+        nice = []
+        for s in schedules:
+            if s.start <= start and end <= s.end:
+                nice.append(s)
+        return [s.to_json() for s in nice]
     if fl.request.method == 'POST':
         data = fl.request.json
         schedule = DriverSchedule(data['driver_phone'],

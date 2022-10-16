@@ -39,6 +39,7 @@ def is_available_transport(start: dt.datetime, end: dt.datetime, transport: Tran
 
 def find_available_driver(start: dt.datetime, end: dt.datetime) -> str or None:
     query = f'https://scipie.ru/api/polus/drivers/schedule/?start={start.isoformat()}&end={end.isoformat()}'
+    print(query)
     schedules_res = requests.get(query)
     if schedules_res.status_code != 200:
         raise requests.HTTPError()

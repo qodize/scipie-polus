@@ -34,6 +34,7 @@ class DriverSchedule:
         data = self.__dict__
         data['start'] = data.pop('start').isoformat()
         data['end'] = data.pop('end').isoformat()
+        print(data)
         return data
 
 
